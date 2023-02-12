@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  api:
+    build: ./
+    ports:
+      - 3000:3000
+    environment:
+      # - DB_URL=mongodb://db/create_user
+      # - MONGO_URL="mongodb+srv://cledson:xcbEjxEK44FSTTZ@cluster0.t4hp6t9.mongodb.net/"
+      - MONGO_URL=mongodb://db:27017/mongodb
+      - SERVER_PORT=3000
+    volumes:
+      - .:/usr/src/app
+    links:
+      - db
+  db:
+    image: mongo:4.4
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data:/data/db
+
+volumes:
+  data:
