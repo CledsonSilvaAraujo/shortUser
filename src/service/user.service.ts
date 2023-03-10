@@ -1,32 +1,43 @@
 import { ObjectId } from 'mongodb';
-import mongoose, { UpdateQuery } from 'mongoose';
-import User from '../models/User';
+import  mongoose, { FilterQuery, UpdateQuery } from 'mongoose';
+import User, { IUser } from '../models/User';
 
-const createUser = ( name: string) => {
+const createUser = async ( name: string) => {
   const user = new User({
-    _id: new mongoose.Types.ObjectId(),
-    name
+    name: name
   });
+  await user.save();
   return user;
 };
 
-const findUser = ( userId : string | object ) => {
-  const filter = userId ? { _id: new ObjectId(userId.toString()) } : {};
-  
-  return User.find(filter);
+const findUser = async ( userId : string ) => {
+  const id = userId.toString();
+  return await User.findById(id).exec();
 };
 
 
-const updateUserById =  ( userId: string , update: UpdateQuery<typeof User>) => {
-  const filter = { _id: new ObjectId(userId.toString())}
-  const user = User.findOneAndUpdate( filter, update ,{
-    new: true
-  });
-  return user;
+const updateUserById =  async ( userId: string , update: UpdateQuery<typeof User>) => {
+  const id  = userId.toString();
+  const filter: FilterQuery<typeof User> = { _id: new ObjectId(id) };
+  return await User.findOneAndUpdate( filter, update).exec();
 };
 
-const deleteUser = ( userId : string ) => {
-  return User.findByIdAndDelete(new ObjectId(userId.toString()));
+const deleteUser = async ( userId : string ) => {
+  return await User.findByIdAndDelete(new ObjectId(userId.toString()));
+};
+
+const addLinkToUser =  async ( userId: string , link: string) => {
+  const id  = userId.toString();
+  const filter :  FilterQuery<typeof User> = { _id: new ObjectId(id) };
+  const update = { $push: {"shortLink": link} }
+  return await User.findOneAndUpdate( filter, update).exec();
+};
+
+const goToUserShortLink =  async ( userId: string , linkId: number) => {
+  const id  = userId.toString();
+  const object = await User.find({_id: id} , { "shortLink" : { $slice : [linkId , linkId] } } ).exec()
+  const link = object[0].shortLink ?  object[0].shortLink[0] : null;
+  return link;
 };
 
 export default {
@@ -34,4 +45,6 @@ export default {
   findUser,
   updateUserById,
   deleteUser,
+  addLinkToUser,
+  goToUserShortLink,
 }

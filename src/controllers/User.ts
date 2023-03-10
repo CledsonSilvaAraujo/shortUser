@@ -2,11 +2,10 @@ import userService from "../service/user.service";
 import { NextFunction, Request, Response } from "express";
 
 const createUser = (req: Request, res: Response, next: NextFunction) => {
-  const {name} = req.body;
+  const { name } = req.body;
 
   const user = userService.createUser( name );
   return user
-      .save()
       .then((user: unknown)=> res.status(201).json({ user }))
       .catch((error: unknown)=> res.status(500).json({ error}));
 };
@@ -20,6 +19,7 @@ const readUser = (req: Request, res: Response, next: NextFunction) => {
   message: 'Not found'})))
   .catch((error: unknown) => res.status(500).json({ error}));
 };
+
 const readAllUsers = (req: Request, res: Response, next: NextFunction) => {
 
   const user = userService.findUser('');
@@ -58,10 +58,50 @@ const deleteUser = (req: Request, res: Response, next: NextFunction) => {
   .catch((error: unknown) => res.status(500).json({ error}));
 };
 
+const associateLinkWithUser = (req: Request, res: Response, next: NextFunction) => {
+  const { userId,  } = req.params;
+  const { link } = req.body;
+  
+  const user = userService.addLinkToUser(userId, link);
+
+  if(user) {
+    
+    return user
+      .then((user: unknown)=> res.status(201).json({ user }))
+      .catch((error: unknown)=> res.status(500).json({ error}));
+  }
+  else
+  {
+    return res.status(404).json({ message: 'Not found' });
+  }
+
+};
+
+const goToUserShortLink = (req: Request, res: Response, next: NextFunction) => {
+  const { userId, linkId  } = req.params;
+  const link = userService.goToUserShortLink(userId, parseInt(linkId));
+  if(link) {
+    return link
+      .then((link: unknown)=> {
+        res.writeHead(301, {
+          Location: `${link}`
+      }).end();
+      })
+      .catch((error: unknown)=> res.status(500).json({ error}));
+  }
+  else
+  {
+    return res.status(404).json({ message: 'Not found' });
+  }
+
+};
+
 export default {
   createUser,
   readUser,
   readAllUsers,
   updateUser,
   deleteUser,
+  associateLinkWithUser,
+  goToUserShortLink
 }

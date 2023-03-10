@@ -4,24 +4,12 @@ import mongoose from 'mongoose';
 import utilLogger from './library/Logger';
 import { config } from './config/config';
 import userRoutes from './routes/User'
+import db from './infra/db'
 const router = express();
 
-mongoose.set("strictQuery", false);
-mongoose
-  .connect(config.mongo.url, { w: 'majority', retryWrites: true })
-  .then(() => {
-    // utilLogger.Log('connected');
-    console.log('connected')
-    StartSever();
-  })
-  .catch((error) => {
-    console.log('unable to connect')
-    console.log(error)
-    // utilLogger.Log('unable to connect');
-    // utilLogger.Log(error);
-  });
 
-const StartSever = () => {
+const StartServer = () => {
+  db.connect();
   router.use((req, res, next) => {
     console.log(`Incoming -> Method: [${req.method}] - url: [${req.url}] - IP: [${req.socket.remoteAddress}] `)
     // utilLogger.Log(`Incoming -> Method: [${req.method}] - url: [${req.url}] - IP: [${req.socket.remoteAddress}] `);
@@ -60,3 +48,5 @@ const StartSever = () => {
     console.log(`Server is running on port ${config.server.port}`);
   })
 };
+
+StartServer();
