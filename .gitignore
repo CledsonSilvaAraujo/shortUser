@@ -5,3 +5,4 @@ dist
 data
 DockerFile
 docker-compose.yml
+coverage
