@@ -42,3 +42,16 @@ describe('should test basic features in user service',  () => {
 
 })
 
+
+
+describe('create user',  () => {
+  test('if number of caracteres in user name is less then 2', async () => {
+   try{
+    const userBefore = await userService.createUser('Joãozinho');
+   }catch(err){
+    expect(err.message).toBe("TAL");
+   }
+  });
+
+
+})
