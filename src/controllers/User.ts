@@ -77,9 +77,9 @@ const associateLinkWithUser = (req: Request, res: Response, next: NextFunction) 
 
 };
 
-const goToUserShortLink = (req: Request, res: Response, next: NextFunction) => {
+const getUserShortLink = (req: Request, res: Response, next: NextFunction) => {
   const { userId, linkId  } = req.params;
-  const link = userService.goToUserShortLink(userId, parseInt(linkId));
+  const link = userService.getUserShortLink(userId, parseInt(linkId));
   if(link) {
     return link
       .then((link: unknown)=> {
@@ -103,5 +103,5 @@ export default {
   updateUser,
   deleteUser,
   associateLinkWithUser,
-  goToUserShortLink
+  getUserShortLink
 }

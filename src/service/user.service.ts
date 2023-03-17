@@ -33,7 +33,7 @@ const addLinkToUser =  async ( userId: string , link: string) => {
   return await User.findOneAndUpdate( filter, update).exec();
 };
 
-const goToUserShortLink =  async ( userId: string , linkId: number) => {
+const getUserShortLink =  async ( userId: string , linkId: number) => {
   const id  = userId.toString();
   const object = await User.find({_id: id} , { "shortLink" : { $slice : [linkId , linkId] } } ).exec()
   const link = object[0].shortLink ?  object[0].shortLink[0] : null;
@@ -46,5 +46,5 @@ export default {
   updateUserById,
   deleteUser,
   addLinkToUser,
-  goToUserShortLink,
+  getUserShortLink,
 }
