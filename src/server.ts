@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import utilLogger from './library/Logger';
 import { config } from './config/config';
 import userRoutes from './routes/User'
+import shortLinkRoutes from './routes/ShortLink'
 import db from './infra/db'
 const router = express();
 
@@ -36,8 +37,8 @@ const StartServer = () => {
 
 
   router.use('/user/', userRoutes);
+  router.use('/shortLink/', shortLinkRoutes);
 
-  router.get('/foo', (req, res, next) => res.status(200).json({ message: 'bar'}));
 
   router.use((req, res, next)=>{
     const error = new Error('not found');
