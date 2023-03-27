@@ -30,7 +30,7 @@ const readAllUsers = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const updateUser = (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.params.userId;
+  const { userId } = req.params;
 
   const user =  userService.updateUserById(userId, req.body);
 
@@ -59,7 +59,7 @@ const deleteUser = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const associateLinkWithUser = (req: Request, res: Response, next: NextFunction) => {
-  const { userId,  } = req.params;
+  const { userId } = req.params;
   const { link } = req.body;
   
   const user = userService.addLinkToUser(userId, link);
@@ -78,8 +78,8 @@ const associateLinkWithUser = (req: Request, res: Response, next: NextFunction) 
 };
 
 const getUserShortLink = (req: Request, res: Response, next: NextFunction) => {
-  const { userId, linkId  } = req.params;
-  const link = userService.getUserShortLink(userId, parseInt(linkId));
+  const { userId, shortLink  } = req.params;
+  const link = userService.getUserShortLink(userId, shortLink);
   if(link) {
     return link
       .then((link: unknown)=> {
