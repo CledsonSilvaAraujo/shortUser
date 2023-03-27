@@ -1,22 +1,20 @@
-// import { Document, Schema } from "mongoose";
-// import mongoose  from "mongoose";
+import { Document, Schema } from "mongoose";
+import mongoose  from "mongoose";
 
-// export interface IUser {
-//   name: string;
-//   shortLink: string | null;
-// }
+export interface IShortLink {
+  userShortLinks: Array<object> | null;
+}
 
-// export interface IUserModel extends IUser, Document {}
+export interface IShortLinkModel extends IShortLink, Document {}
 
-// const UserSchema: Schema = new Schema(
-//   {
-//     name: { type: String, required: true },
-//     shortLink: { type: String, require: false }
-//   },
-//   {
-//     timestamps: true,
-//     versionKey: false
-//   }
-// );
+const ShortLinkSchema: Schema = new Schema(
+  {
+    userShortLinks: { type: Array<object> , require: false }
+  },
+  {
+    timestamps: true,
+    versionKey: false
+  }
+);
 
-// export default mongoose.model<IUserModel>('User',UserSchema);
+export default mongoose.model<IShortLinkModel>('ShortLink',ShortLinkSchema);
